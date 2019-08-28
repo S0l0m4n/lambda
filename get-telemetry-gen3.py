@@ -6,9 +6,8 @@ PREFIX = "/switchee/gen3/telemetry"
 
 def make_body(event):
   body = ""
-  x = json.loads(event)
   try:
-    path = x['path']
+    path = event['path']
   except KeyError:
     return body
   if path.startswith(PREFIX):
@@ -22,10 +21,10 @@ def lambda_handler(event, context):
   body = make_body(event)
   return {
       'statusCode': 200,
-      'body': body
+      'body': json.dumps(body)
   }
 
 if __name__ == '__main__':
   with open('foo.txt', 'r') as f:
     for line in f:
-      print(make_body(line))
+      print(lambda_handler(json.loads(line), ""))
